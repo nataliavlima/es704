@@ -1,0 +1,50 @@
+clc; clear; close all force;
+
+%data = importdata('Data03.csv')
+data = csvread('Data03.csv');
+x1 = data(:, 1);
+y1 = data(:, 2);
+
+% Letra (A)
+figure
+plot(x1, y1);
+title("Sinal y(t) em função do tempo");
+xlabel("Tempo (s)");
+ylabel("y(t)");
+
+media= mean(y1)
+yrms = rms(y1)
+
+% Letra (B)
+dt = 1e-3;
+t = [0:dt:2]
+M= 2001;
+%dt = max(x1)/M  % Resolução temporal: valor maximo do tempo/numero de pontos que temos
+df = 1/(M*dt)  % Resolução espectral
+f = [0:df:(M-1)*df]'; % frequencia
+
+
+Y= fft(y1,M);       %FFT
+mY= abs(Y);         %Magnitude
+pY = angle(Y);      %Fase
+pyy=(Y.*conj(Y));   %Espectro de potencia
+
+figure
+subplot(3,1,1); plot(f, mY); 
+title('Espectro de Magnitude');
+xlabel('f (Hz)');
+ylabel('|Y(f)|');
+
+subplot(3,1,2); plot(f, pY);
+title('Espectro de fase');
+xlabel('f (Hz)');
+ylabel('/Y(f) (rad)');
+
+subplot(3,1,3); plot(f, pyy);
+title('Espectro de potência');
+xlabel('f (Hz)');
+ylabel('Pyy(f) (dB)');
+
+% Letra (C)
+spectogram(y1, 128, 1, 2001, 1/dt)
+
